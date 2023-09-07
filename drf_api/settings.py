@@ -14,16 +14,17 @@ from pathlib import Path
 import os
 import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-CLOUDINARY_STORAGE = {
-    # other settings, like credentials
-    'STATICFILES_MANIFEST_ROOT': BASE_DIR / 'my-manifest-directory-api'
-}
-
 if os.path.exists('env.py'):
     import env
+
+CLOUDINARY_STORAGE = {
+    'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
+}
+MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
@@ -60,19 +61,16 @@ REST_AUTH_SERIALIZERS = {
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-IS_HEROKU_APP = "DYNO" in os.environ and "CI" not in os.environ
-
 # SECURITY WARNING: don't run with debug turned on in production!
-if not IS_HEROKU_APP:
-    DEBUG = True
+DEBUG = 'DEV' in os.environ
 
 ALLOWED_HOSTS = ['djangorest-api-0a8f6a34c732.herokuapp.com', 'localhost', '127.0.0.1']
+
+
 
 # Application definition
 
 INSTALLED_APPS = [
-     
-    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -104,7 +102,6 @@ SITE_ID = 1
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -197,10 +194,23 @@ STORAGES = {
     # Enable WhiteNoise's GZip and Brotli compression of static assets:
     # https://whitenoise.readthedocs.io/en/latest
     # /django.html#add-compression-and-caching-support
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
 }
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # Cloudinary Settings
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
