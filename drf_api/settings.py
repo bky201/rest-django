@@ -17,14 +17,13 @@ import dj_database_url
 if os.path.exists('env.py'):
     import env
 
-CLOUDINARY_STORAGE = {
-    'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
-}
-MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+CLOUDINARY_STORAGE = {
+    # other settings, like credentials
+    'STATICFILES_MANIFEST_ROOT': BASE_DIR / 'my-api-directory'
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
@@ -71,6 +70,7 @@ ALLOWED_HOSTS = ['djangorest-api-0a8f6a34c732.herokuapp.com', 'localhost', '127.
 # Application definition
 
 INSTALLED_APPS = [
+     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -194,9 +194,30 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STORAGES = {
+    # Enable WhiteNoise's GZip and Brotli compression of static assets:
+    # https://whitenoise.readthedocs.io/en/latest
+    # /django.html#add-compression-and-caching-support
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+}
+
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+# Cloudinary Settings
+CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
+
 # Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
