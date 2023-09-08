@@ -72,7 +72,6 @@ ALLOWED_HOSTS = ['djangorfapi-517d92cdd717.herokuapp.com', 'localhost', '127.0.0
 
 INSTALLED_APPS = [
 
-    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
