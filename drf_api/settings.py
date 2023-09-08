@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 import dj_database_url
 
 if os.path.exists('env.py'):
@@ -68,7 +69,7 @@ ALLOWED_HOSTS = ['djangorfapi-517d92cdd717.herokuapp.com', 'localhost', '127.0.0
 # Application definition
 
 INSTALLED_APPS = [
-     'whitenoise.runserver_nostatic',
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -196,9 +197,9 @@ STORAGES = {
     # Enable WhiteNoise's GZip and Brotli compression of static assets:
     # https://whitenoise.readthedocs.io/en/latest
     # /django.html#add-compression-and-caching-support
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
-    },
+    # "staticfiles": {
+    #     "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    # },
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
@@ -219,3 +220,5 @@ CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+django_heroku.settings(locals())
