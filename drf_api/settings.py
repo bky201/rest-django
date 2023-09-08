@@ -12,19 +12,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
 import dj_database_url
 
 if os.path.exists('env.py'):
     import env
 
+CLOUDINARY_STORAGE = {
+    'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
+}
+MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-CLOUDINARY_STORAGE = {
-    # other settings, like credentials
-    'STATICFILES_MANIFEST_ROOT': BASE_DIR / 'my-drf-directory'
-}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
@@ -41,6 +41,7 @@ REST_FRAMEWORK = {
 if 'DEV' not in os.environ:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ]
 
 REST_USE_JWT = True
@@ -71,7 +72,6 @@ ALLOWED_HOSTS = ['djangorfapi-517d92cdd717.herokuapp.com', 'localhost', '127.0.0
 # Application definition
 
 INSTALLED_APPS = [
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -103,7 +103,6 @@ SITE_ID = 1
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -113,14 +112,9 @@ MIDDLEWARE = [
 ]
 
 if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS = [
-        os.environ.get('CLIENT_ORIGIN')
-    ]
-else:
-    CORS_ALLOWED_ORIGIN_REGEXES = [
-        r"^https://.*\.git\.io$",
-    ]
-
+     CORS_ALLOWED_ORIGINS = [
+         os.environ.get('CLIENT_ORIGIN')
+     ]
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -200,23 +194,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STORAGES = {
-    # Enable WhiteNoise's GZip and Brotli compression of static assets:
-    # https://whitenoise.readthedocs.io/en/latest
-    # /django.html#add-compression-and-caching-support
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-    },
-}
-
-# Cloudinary Settings
-CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
-
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-# Configure Django App for Heroku.
-django_heroku.settings(locals())
