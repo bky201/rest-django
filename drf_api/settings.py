@@ -119,7 +119,7 @@ if 'CLIENT_ORIGIN' in os.environ:
     ]
 else:
     CORS_ALLOWED_ORIGIN_REGEXES = [
-        r"^https://.*\.git\.io$",
+        os.environ.get('LOCAL_HOST')
     ]
 
 
