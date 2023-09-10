@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import os
 import django_heroku
@@ -27,19 +28,27 @@ CLOUDINARY_STORAGE = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [(
-        'rest_framework.authentication.SessionAuthentication'
-        if 'DEV' in os.environ
-        else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
-    )],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [(
+    #     'rest_framework.authentication.SessionAuthentication'
+    #     if 'DEV' in os.environ
+    #     else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
+    # )],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
 
-    # Configure token expiration settings
-    'DEFAULT_TOKEN_EXPIRE_SECONDS': 60 * 60 * 24,  # 24 hours
-    'DEFAULT_TOKEN_EXPIRE_AT': None,
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Adjust the token lifetimes as needed
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=7),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=7),
 }
 
 if 'DEV' not in os.environ:
@@ -86,6 +95,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary',
     'rest_framework',
+    'rest_framework_simplejwt',
     'django_filters',
     'rest_framework.authtoken',
     'dj_rest_auth',
