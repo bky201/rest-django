@@ -36,6 +36,10 @@ REST_FRAMEWORK = {
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d %b %Y',
+
+    # Configure token expiration settings
+    'DEFAULT_TOKEN_EXPIRE_SECONDS': 60 * 60 * 24,  # 24 hours
+    'DEFAULT_TOKEN_EXPIRE_AT': None,
 }
 
 if 'DEV' not in os.environ:
