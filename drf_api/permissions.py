@@ -6,7 +6,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     if request.method in permissions.SAFE_METHODS:
       return True
     return obj.owner == request.user
- from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
  
