@@ -17,7 +17,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import root_route, logout_route
-from .views import CustomTokenObtainPairView, CustomTokenRefreshView, CustomTokenVerifyView
 
 urlpatterns = [
     path('', root_route),
@@ -34,7 +33,4 @@ urlpatterns = [
     path('', include('comments.urls')),
     path('', include('likes.urls')),
     path('', include('followers.urls')),
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/verify/', CustomTokenVerifyView.as_view(), name='token_verify'),
 ] 

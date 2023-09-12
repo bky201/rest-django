@@ -4,29 +4,12 @@ from .settings import (
     JWT_AUTH_COOKIE, JWT_AUTH_REFRESH_COOKIE, JWT_AUTH_SAMESITE,
     JWT_AUTH_SECURE,
 )
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    # You can add custom logic or serializers here if needed
-    pass
-
-class CustomTokenRefreshView(TokenRefreshView):
-    # You can add custom logic or serializers here if needed
-    pass
-
-class CustomTokenVerifyView(TokenVerifyView):
-    # You can add custom logic or serializers here if needed
-    pass
-
 
 @api_view()
 def root_route(request):
     return Response({
         "message": "Welcome to my drf API!"
     })
-
 
 # dj-rest-auth logout view fix
 @api_view(['POST'])
